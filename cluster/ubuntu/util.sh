@@ -44,6 +44,7 @@ function setClusterInfo() {
   for i in $nodes; do
     nodeIP=${i#*@}
 
+    echo "$roles_array[0]"
     if [[ "${roles_array[${ii}]}" == "ai" ]]; then
       MASTER_IP=$nodeIP
       MASTER=$i
@@ -534,7 +535,7 @@ function provision-node() {
                     service kube-proxy start'
     NEED_RECONFIG_DOCKER=false
   fi
-  
+
   BASH_DEBUG_FLAGS=""
   if [[ "$DEBUG" == "true" ]] ; then
     BASH_DEBUG_FLAGS="set -x"
@@ -560,7 +561,7 @@ function provision-node() {
       '${KUBE_PROXY_EXTRA_OPTS}'
     create-flanneld-opts '${MASTER_IP}' '${1#*@}'
 
-    sudo -E -p '[sudo] password to start node: ' -- /bin/bash -ce '    
+    sudo -E -p '[sudo] password to start node: ' -- /bin/bash -ce '
       ${BASH_DEBUG_FLAGS}
       cp ~/kube/default/* /etc/default/
       cp ~/kube/init_conf/* /etc/init/
@@ -615,7 +616,7 @@ function provision-masterandnode() {
         "'
     NEED_RECONFIG_DOCKER=false
   fi
-  
+
   EXTRA_SANS=(
     IP:${MASTER_IP}
     IP:${SERVICE_CLUSTER_IP_RANGE%.*}.1
@@ -660,7 +661,7 @@ function provision-masterandnode() {
       '${KUBE_PROXY_EXTRA_OPTS}'
     create-flanneld-opts '127.0.0.1' '${MASTER_IP}'
 
-    FLANNEL_OTHER_NET_CONFIG='${FLANNEL_OTHER_NET_CONFIG}' sudo -E -p '[sudo] password to start master: ' -- /bin/bash -ce ' 
+    FLANNEL_OTHER_NET_CONFIG='${FLANNEL_OTHER_NET_CONFIG}' sudo -E -p '[sudo] password to start master: ' -- /bin/bash -ce '
       ${BASH_DEBUG_FLAGS}
       cp ~/kube/default/* /etc/default/
       cp ~/kube/init_conf/* /etc/init/
@@ -697,7 +698,7 @@ function check-pods-torn-down() {
 # Delete a kubernetes cluster
 function kube-down() {
   export KUBECTL_PATH="${KUBE_ROOT}/cluster/ubuntu/binaries/kubectl"
-  
+
   export KUBE_CONFIG_FILE=${KUBE_CONFIG_FILE:-${KUBE_ROOT}/cluster/ubuntu/config-default.sh}
   source "${KUBE_CONFIG_FILE}"
 
